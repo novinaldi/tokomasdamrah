@@ -1,15 +1,18 @@
 <?php
-class Modeljenispengeluaran extends CI_Model
+class Modeljenispengeluaranx extends CI_Model
 {
-    var $table = 'jenispengeluaran'; //nama tabel dari database
-    var $column_order = array(null, 'jenis', null); //field yang ada di table user
-    var $column_search = array('jenis'); //field yang diizin untuk pencarian 
-    var $order = array('id' => 'desc'); // default order 
+    // var $table = 'pengeluaran'; //nama tabel dari database
+    var $column_order = array(null, 'tglpengeluaran', 'namapengeluaran', 'jmlpengeluaran', 'jenis', null); //field yang ada di table user
+    var $column_search = array('tglpengeluaran', 'namapengeluaran'); //field yang diizin untuk pencarian 
+    var $order = array('tglpengeluaran' => 'desc'); // default order 
 
     private function _get_datatables_query()
     {
 
-        $this->db->from($this->table);
+        // $this->db->from($this->table);
+        $this->db->select('idpengeluaran,tglpengeluaran,namapengeluaran,jmlpengeluaran,jenis')
+            ->from('pengeluaran')
+            ->join('jenispengeluaran', 'pengeluaran.jenisid=jenispengeluaran.id');
 
         $i = 0;
 
@@ -58,7 +61,10 @@ class Modeljenispengeluaran extends CI_Model
 
     public function count_all()
     {
-        $this->db->from($this->table);
+        // $this->db->from($this->table);
+        $this->db->select('idpengeluaran,tglpengeluaran,namapengeluaran,jmlpengeluaran,jenis')
+            ->from('pengeluaran')
+            ->join('jenispengeluaran', 'pengeluaran.jenisid=jenispengeluaran.id');
         return $this->db->count_all_results();
     }
 }
