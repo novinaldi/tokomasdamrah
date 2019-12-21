@@ -49,4 +49,13 @@ class Pengeluaran extends CI_Controller
             exit('data tidak bisa dieksekusi');
         }
     }
+
+    function tambahdata()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('Not Found');
+        } else {
+            $this->load->view('pengeluaran/formtambahdata');
+        }
+    }
 }

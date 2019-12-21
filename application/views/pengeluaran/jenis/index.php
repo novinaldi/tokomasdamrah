@@ -1,6 +1,7 @@
 <link href="<?= base_url('assets/') ?>vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 <script src="<?= base_url('assets/') ?>vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/') ?>vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="<?= base_url('assets/novinaldi/scriptpengeluaran.js') ?>"></script>
 <script>
 $(document).ready(function() {
     // $('#dataPelanggan').DataTable();
@@ -34,7 +35,7 @@ function tampildatajenispengeluaran() {
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" onclick="return tambahdata();">
                         <i class="fa fw fa-plus"></i> Tambah Jenis Pengeluaran
                     </button>
                 </h6>
