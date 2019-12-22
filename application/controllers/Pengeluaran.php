@@ -129,7 +129,7 @@ class Pengeluaran extends CI_Controller
                 $row[] = $field->namapengeluaran;
                 $row[] = number_format($field->jmlpengeluaran, 0, ",", ".");
                 $row[] = $field->jenis;
-                $row[] = '';
+                $row[] = '<button type="button" onclick="return hapus(' . $field->idpengeluaran . ')" class="btn btn-outline-danger"><i class="fa fw fa-trash-alt"></i></button><button type="button" onclick="return edit(' . $field->idpengeluaran . ')" class="btn btn-outline-info"><i class="fa fw fa-pencil-alt"></i></button>';
                 $data[] = $row;
             }
 
@@ -151,7 +151,8 @@ class Pengeluaran extends CI_Controller
         if (!$this->input->is_ajax_request()) {
             exit('Not Found');
         } else {
-            $this->load->view('pengeluaran/formtambahdatapengeluaran');
+            $data['datajenis'] = $this->db->get('jenispengeluaran');
+            $this->load->view('pengeluaran/formtambahdatapengeluaran', $data);
         }
     }
 
@@ -163,13 +164,134 @@ class Pengeluaran extends CI_Controller
             $tgl = $this->input->post('tgl', true);
             $nama = $this->input->post('nama', true);
             $jml = $this->input->post('jml', true);
+            $jenis = $this->input->post('jenis', true);
 
-            $namafile = rand(1, 9999) . date(dmY, strtotime($tgl));
+            $namafile = rand(1, 9999) . date('dmY', strtotime($tgl));
 
             if ($_FILES['uploadbukti']['name'] != NULL) {
-                echo 'ada';
+                $config = array(
+                    'upload_path' => './assets/upload/buktipengeluaran/', //nama folder di root
+                    'allowed_types' => 'jpg|jpeg|png',
+                    'max_size' => 0,
+                    'max_width' => 0,
+                    'max_height' => 0,
+                    'file_name' => $namafile
+                );
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+                if (!$this->upload->do_upload('uploadbukti')) {
+                    echo $this->upload->display_errors();
+                } else {
+                    $media = $this->upload->data();
+                    $pathbukitbaru = './assets/upload/buktipengeluaran/' . $media['file_name'];
+
+                    $datasimpan = [
+                        'tglpengeluaran' => $tgl,
+                        'namapengeluaran' => $nama, 'jmlpengeluaran' => $jml,
+                        'uploadbukti' => $pathbukitbaru, 'jenisid' => $jenis
+                    ];
+                }
             } else {
-                echo 'tidak ada';
+                $datasimpan = [
+                    'tglpengeluaran' => $tgl,
+                    'namapengeluaran' => $nama, 'jmlpengeluaran' => $jml,
+                    'jenisid' => $jenis
+                ];
+            }
+            $simpan = $this->db->insert('pengeluaran', $datasimpan);
+            if ($simpan) {
+                echo 'berhasil';
+            }
+        }
+    }
+
+    function hapusdata()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('Not Found');
+        } else {
+            $id = $this->input->post('id', true);
+            //ambildata
+
+            $ambildata = $this->db->get_where('pengeluaran', ['idpengeluaran' => $id]);
+            $row = $ambildata->row_array();
+            $pathbukti = $row['uploadbukti'];
+
+            $this->db->delete('pengeluaran', ['idpengeluaran' => $id]);
+            @unlink($pathbukti);
+        }
+    }
+
+    function edit()
+    {
+        $id = $this->input->post('id', true);
+        $ambildata = $this->db->get_where('pengeluaran', ['idpengeluaran' => $id]);
+        $row = $ambildata->row_array();
+        $data = [
+            'id' => $id,
+            'tgl' => $row['tglpengeluaran'],
+            'nama' => $row['namapengeluaran'],
+            'jml' => $row['jmlpengeluaran'],
+            'idjenis' => $row['jenisid'],
+            'bukti' => $row['uploadbukti'],
+            'datajenis' => $this->db->get('jenispengeluaran')
+        ];
+        $this->load->view('pengeluaran/formeditpengeluaran', $data);
+    }
+
+    function updatedatapengeluaran()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('Not Found');
+        } else {
+            $id = $this->input->post('id', true);
+            $tgl = $this->input->post('tgl', true);
+            $nama = $this->input->post('nama', true);
+            $jml = $this->input->post('jml', true);
+            $jenis = $this->input->post('jenis', true);
+
+            $namafile = rand(1, 9999) . date('dmY', strtotime($tgl));
+
+            $ambildata = $this->db->get_where('pengeluaran', ['idpengeluaran' => $id]);
+            $row = $ambildata->row_array();
+            $pathlama = $row['uploadbukti'];
+
+            if ($_FILES['uploadbukti']['name'] != NULL) {
+                $config = array(
+                    'upload_path' => './assets/upload/buktipengeluaran/', //nama folder di root
+                    'allowed_types' => 'jpg|jpeg|png',
+                    'max_size' => 0,
+                    'max_width' => 0,
+                    'max_height' => 0,
+                    'file_name' => $namafile
+                );
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+                if (!$this->upload->do_upload('uploadbukti')) {
+                    echo $this->upload->display_errors();
+                } else {
+                    @unlink($pathlama);
+
+                    $media = $this->upload->data();
+                    $pathbukitbaru = './assets/upload/buktipengeluaran/' . $media['file_name'];
+
+                    $dataupdate = [
+                        'tglpengeluaran' => $tgl,
+                        'namapengeluaran' => $nama, 'jmlpengeluaran' => $jml,
+                        'uploadbukti' => $pathbukitbaru, 'jenisid' => $jenis
+                    ];
+                }
+            } else {
+                $dataupdate = [
+                    'tglpengeluaran' => $tgl,
+                    'namapengeluaran' => $nama, 'jmlpengeluaran' => $jml,
+                    'jenisid' => $jenis
+                ];
+            }
+            $this->db->where('idpengeluaran', $id);
+            $simpan = $this->db->update('pengeluaran', $dataupdate);
+            if ($simpan) {
+                echo 'berhasil';
             }
         }
     }

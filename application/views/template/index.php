@@ -160,6 +160,25 @@
                     </div>
                 </div>
             </li>
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                Report
+            </div>
+            <li class="nav-item <?php if ($this->uri->segment(1) == 'laporan') echo 'active'; ?>">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLaporan"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Report</span>
+                </a>
+                <div id="collapseLaporan"
+                    class="collapse <?php if ($this->uri->segment(1) == 'laporan') echo 'show'; ?>"
+                    aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Report</h6>
+                        <a class="collapse-item" href="<?= site_url('laporan/pengeluaran') ?>">Report Pengeluaran</a>
+                    </div>
+                </div>
+            </li>
         </ul>
         <!-- End of Sidebar -->
 
