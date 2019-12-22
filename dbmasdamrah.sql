@@ -12,48 +12,143 @@ MySQL - 10.1.30-MariaDB : Database - dbmasdamrah
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`dbmasdamrah` /*!40100 DEFAULT CHARACTER SET latin1 */;
+/*Table structure for table `detail_penitipanemas` */
 
-USE `dbmasdamrah`;
+DROP TABLE IF EXISTS `detail_penitipanemas`;
 
-/*Table structure for table `bayarpinjaman` */
-
-DROP TABLE IF EXISTS `bayarpinjaman`;
-
-CREATE TABLE `bayarpinjaman` (
-  `bayarid` bigint(20) NOT NULL AUTO_INCREMENT,
-  `bayartgl` date DEFAULT NULL,
-  `bayarpinjamanno` char(20) DEFAULT NULL,
-  `bayarjml` int(11) DEFAULT NULL,
-  `bayarcara` char(1) DEFAULT NULL,
-  `bayarfoto` text,
-  PRIMARY KEY (`bayarid`),
-  KEY `bayarpinjamanno` (`bayarpinjamanno`),
-  CONSTRAINT `bayarpinjaman_ibfk_1` FOREIGN KEY (`bayarpinjamanno`) REFERENCES `pinjaman` (`pinjamanno`) ON UPDATE CASCADE
+CREATE TABLE `detail_penitipanemas` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `notitip` char(20) DEFAULT NULL,
+  `tgl` date DEFAULT NULL,
+  `idjenis` int(11) DEFAULT NULL,
+  `pilihan` enum('1','2') DEFAULT NULL,
+  `jml` decimal(5,2) DEFAULT NULL,
+  `buktifoto` text,
+  `ket` text,
+  PRIMARY KEY (`id`),
+  KEY `notitip` (`notitip`),
+  KEY `idjenis` (`idjenis`),
+  CONSTRAINT `detail_penitipanemas_ibfk_1` FOREIGN KEY (`notitip`) REFERENCES `penitipanemas` (`notitip`) ON UPDATE CASCADE,
+  CONSTRAINT `detail_penitipanemas_ibfk_2` FOREIGN KEY (`idjenis`) REFERENCES `jenisemas` (`jenisid`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-/*Data for the table `bayarpinjaman` */
+/*Data for the table `detail_penitipanemas` */
 
-/*Table structure for table `detailpenitipan` */
+/*Table structure for table `detailpinjaman_emas` */
 
-DROP TABLE IF EXISTS `detailpenitipan`;
+DROP TABLE IF EXISTS `detailpinjaman_emas`;
 
-CREATE TABLE `detailpenitipan` (
-  `dettitipid` bigint(20) NOT NULL AUTO_INCREMENT,
-  `dettitipno` char(20) DEFAULT NULL,
-  `dettitiptgl` date DEFAULT NULL,
-  `dettitipjml` int(11) DEFAULT NULL,
-  PRIMARY KEY (`dettitipid`),
-  KEY `dettitipno` (`dettitipno`),
-  CONSTRAINT `detailpenitipan_ibfk_1` FOREIGN KEY (`dettitipno`) REFERENCES `penitipan` (`penitipanid`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+CREATE TABLE `detailpinjaman_emas` (
+  `iddetail` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nodetail` char(20) DEFAULT NULL,
+  `tgl` date DEFAULT NULL,
+  `pilihan` enum('1','2') DEFAULT NULL,
+  `jml` decimal(5,2) DEFAULT NULL,
+  `buktifoto` text,
+  `ket` text,
+  PRIMARY KEY (`iddetail`),
+  KEY `nodetail` (`nodetail`),
+  CONSTRAINT `detailpinjaman_emas_ibfk_1` FOREIGN KEY (`nodetail`) REFERENCES `pinjaman_emas` (`nomor`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-/*Data for the table `detailpenitipan` */
+/*Data for the table `detailpinjaman_emas` */
 
-insert  into `detailpenitipan`(`dettitipid`,`dettitipno`,`dettitiptgl`,`dettitipjml`) values 
-(4,'0911190002','2019-11-09',50),
-(5,'0911190001','2019-11-09',25),
-(6,'0911190001','2019-11-10',15);
+/*Table structure for table `detailpinjaman_uang` */
+
+DROP TABLE IF EXISTS `detailpinjaman_uang`;
+
+CREATE TABLE `detailpinjaman_uang` (
+  `iddetail` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nodetail` char(20) DEFAULT NULL,
+  `tgl` date DEFAULT NULL,
+  `pilihan` enum('1','2') DEFAULT NULL,
+  `jml` double DEFAULT NULL,
+  `buktifoto` text,
+  `ket` text,
+  PRIMARY KEY (`iddetail`),
+  KEY `nodetail` (`nodetail`),
+  CONSTRAINT `detailpinjaman_uang_ibfk_1` FOREIGN KEY (`nodetail`) REFERENCES `pinjaman_uang` (`nomor`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `detailpinjaman_uang` */
+
+/*Table structure for table `jenisemas` */
+
+DROP TABLE IF EXISTS `jenisemas`;
+
+CREATE TABLE `jenisemas` (
+  `jenisid` int(11) NOT NULL AUTO_INCREMENT,
+  `jenisnama` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`jenisid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+/*Data for the table `jenisemas` */
+
+insert  into `jenisemas`(`jenisid`,`jenisnama`) values 
+(1,'Emas Antam'),
+(2,'Emas Murni'),
+(3,'Perhiasan');
+
+/*Table structure for table `jenispengeluaran` */
+
+DROP TABLE IF EXISTS `jenispengeluaran`;
+
+CREATE TABLE `jenispengeluaran` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `jenis` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FULLTEXT KEY `jenis` (`jenis`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+
+/*Data for the table `jenispengeluaran` */
+
+insert  into `jenispengeluaran`(`id`,`jenis`) values 
+(10,'ATK (Alat Tulis Kerja)'),
+(14,'Perjalanan');
+
+/*Table structure for table `nn_detailtitipuang` */
+
+DROP TABLE IF EXISTS `nn_detailtitipuang`;
+
+CREATE TABLE `nn_detailtitipuang` (
+  `iddetail` bigint(20) NOT NULL AUTO_INCREMENT,
+  `notitip` char(20) DEFAULT NULL,
+  `tgl` date DEFAULT NULL,
+  `pilihan` enum('1','2') DEFAULT NULL COMMENT '1 adalah penitipan dan 2 adalah pengambilan',
+  `nominal` double DEFAULT NULL,
+  `jmlsaldo` double DEFAULT NULL,
+  `buktifoto` text,
+  `ket` text,
+  PRIMARY KEY (`iddetail`),
+  KEY `id` (`notitip`),
+  CONSTRAINT `nn_detailtitipuang_ibfk_1` FOREIGN KEY (`notitip`) REFERENCES `nn_titipuang` (`notitip`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+/*Data for the table `nn_detailtitipuang` */
+
+insert  into `nn_detailtitipuang`(`iddetail`,`notitip`,`tgl`,`pilihan`,`nominal`,`jmlsaldo`,`buktifoto`,`ket`) values 
+(1,'2343','2019-12-03','1',90,90,NULL,'');
+
+/*Table structure for table `nn_titipuang` */
+
+DROP TABLE IF EXISTS `nn_titipuang`;
+
+CREATE TABLE `nn_titipuang` (
+  `notitip` char(20) NOT NULL,
+  `tglawal` date DEFAULT NULL,
+  `pelnik` char(16) DEFAULT NULL,
+  `jmlawal` double DEFAULT NULL,
+  `jmlsisa` double DEFAULT NULL,
+  `buktifoto` text,
+  `ket` text,
+  `stt` char(1) DEFAULT '0',
+  PRIMARY KEY (`notitip`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `nn_titipuang` */
+
+insert  into `nn_titipuang`(`notitip`,`tglawal`,`pelnik`,`jmlawal`,`jmlsisa`,`buktifoto`,`ket`,`stt`) values 
+('2343','2019-12-03','1371114509950007',90,90,NULL,NULL,'0');
 
 /*Table structure for table `pelanggan` */
 
@@ -66,98 +161,91 @@ CREATE TABLE `pelanggan` (
   `pelalamat` varchar(100) DEFAULT NULL,
   `pelnohp` char(20) DEFAULT NULL,
   `pelfoto` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`pelnik`)
+  PRIMARY KEY (`pelnik`),
+  FULLTEXT KEY `pelnama` (`pelnama`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `pelanggan` */
 
 insert  into `pelanggan`(`pelnik`,`pelnama`,`peljk`,`pelalamat`,`pelnohp`,`pelfoto`) values 
-('1371102108960005','Ramadhani Fitri','P','Solok',NULL,NULL),
-('1371114509950007','Novinaldi','L','Olo Ladang','085272805760','./temp/upload/ktppelanggan/1371114509950007.jpg');
+('1371102108960005','Ramadhani Fitri','P','Solok',NULL,''),
+('1371114509950010','Sumayyah Raudhatul Husna','P','Jl. Solok','087779989',NULL),
+('1371114509950012','Mizan Al-Fatih','L','Solok','081364567765',NULL),
+('1371114509950090','Al-Fatih Rayhan Abdullah','L','Solok','085272805766',NULL);
 
 /*Table structure for table `pengeluaran` */
 
 DROP TABLE IF EXISTS `pengeluaran`;
 
 CREATE TABLE `pengeluaran` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `idpengeluaran` bigint(20) NOT NULL AUTO_INCREMENT,
   `namapengeluaran` varchar(100) DEFAULT NULL,
   `tglpengeluaran` date DEFAULT NULL,
   `jmlpengeluaran` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `uploadbukti` text,
+  `jenisid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idpengeluaran`),
+  KEY `jenisid` (`jenisid`),
+  CONSTRAINT `pengeluaran_ibfk_1` FOREIGN KEY (`jenisid`) REFERENCES `jenispengeluaran` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*Data for the table `pengeluaran` */
 
-insert  into `pengeluaran`(`id`,`namapengeluaran`,`tglpengeluaran`,`jmlpengeluaran`) values 
-(1,'adfadsf','2019-11-11',600000);
+insert  into `pengeluaran`(`idpengeluaran`,`namapengeluaran`,`tglpengeluaran`,`jmlpengeluaran`,`uploadbukti`,`jenisid`) values 
+(5,'Pembelian Pena kwitansi dan lain sebagainya','2019-12-20',90000,'./assets/upload/buktipengeluaran/114320122019.jpg',10);
 
-/*Table structure for table `penitipan` */
+/*Table structure for table `penitipanemas` */
 
-DROP TABLE IF EXISTS `penitipan`;
+DROP TABLE IF EXISTS `penitipanemas`;
 
-CREATE TABLE `penitipan` (
-  `penitipanid` char(20) NOT NULL,
-  `penitipantgl` date DEFAULT NULL,
-  `penitipanpelnik` char(16) DEFAULT NULL,
-  `penitipantotal` double DEFAULT NULL,
-  `penitipanstt` char(1) DEFAULT '0',
-  `penitipantglambil` date DEFAULT NULL,
-  PRIMARY KEY (`penitipanid`),
-  KEY `penitipanpelnik` (`penitipanpelnik`),
-  CONSTRAINT `penitipan_ibfk_1` FOREIGN KEY (`penitipanpelnik`) REFERENCES `pelanggan` (`pelnik`) ON UPDATE CASCADE
+CREATE TABLE `penitipanemas` (
+  `notitip` char(20) NOT NULL,
+  `tglawal` date DEFAULT NULL,
+  `pelnik` char(16) DEFAULT NULL,
+  `totaltitipan` decimal(5,2) DEFAULT NULL,
+  `totalambil` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`notitip`),
+  KEY `pelnik` (`pelnik`),
+  CONSTRAINT `penitipanemas_ibfk_1` FOREIGN KEY (`pelnik`) REFERENCES `pelanggan` (`pelnik`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-/*Data for the table `penitipan` */
+/*Data for the table `penitipanemas` */
 
-insert  into `penitipan`(`penitipanid`,`penitipantgl`,`penitipanpelnik`,`penitipantotal`,`penitipanstt`,`penitipantglambil`) values 
-('0911190001','2019-11-09','1371114509950007',40,'0','0000-00-00'),
-('0911190002','2019-11-09','1371102108960005',50,'1','2019-11-13');
+/*Table structure for table `pinjaman_emas` */
 
-/*Table structure for table `pinjaman` */
+DROP TABLE IF EXISTS `pinjaman_emas`;
 
-DROP TABLE IF EXISTS `pinjaman`;
-
-CREATE TABLE `pinjaman` (
-  `pinjamanno` char(20) NOT NULL,
-  `pinjamantgl` date DEFAULT NULL,
-  `pinjamanpelnik` char(16) DEFAULT NULL,
-  `pinjamanjml` int(11) DEFAULT NULL,
-  `pinjamansisa` int(11) DEFAULT NULL,
-  `pinjamanstt` char(1) DEFAULT '0',
-  PRIMARY KEY (`pinjamanno`)
+CREATE TABLE `pinjaman_emas` (
+  `nomor` char(20) NOT NULL,
+  `tglawal` date DEFAULT NULL,
+  `nikpel` char(16) DEFAULT NULL,
+  `stt` char(1) DEFAULT '0',
+  `jmltotalpinjam` decimal(5,2) DEFAULT NULL,
+  `jmltotalbayar` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`nomor`),
+  KEY `nikpel` (`nikpel`),
+  CONSTRAINT `pinjaman_emas_ibfk_1` FOREIGN KEY (`nikpel`) REFERENCES `pelanggan` (`pelnik`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-/*Data for the table `pinjaman` */
+/*Data for the table `pinjaman_emas` */
 
-insert  into `pinjaman`(`pinjamanno`,`pinjamantgl`,`pinjamanpelnik`,`pinjamanjml`,`pinjamansisa`,`pinjamanstt`) values 
-('PJ-1011190001','2019-11-10','1371102108960005',90,NULL,'0');
+/*Table structure for table `pinjaman_uang` */
 
-/*Table structure for table `testdummy` */
+DROP TABLE IF EXISTS `pinjaman_uang`;
 
-DROP TABLE IF EXISTS `testdummy`;
+CREATE TABLE `pinjaman_uang` (
+  `nomor` char(20) NOT NULL,
+  `tglawal` date DEFAULT NULL,
+  `nikpel` char(16) DEFAULT NULL,
+  `stt` char(1) DEFAULT '0',
+  `jmltotalpinjam` double DEFAULT NULL,
+  `jmltotalbayar` double DEFAULT NULL,
+  PRIMARY KEY (`nomor`),
+  KEY `nikpel` (`nikpel`),
+  CONSTRAINT `pinjaman_uang_ibfk_1` FOREIGN KEY (`nikpel`) REFERENCES `pelanggan` (`pelnik`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `testdummy` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `tgl` date DEFAULT NULL,
-  `jenis` enum('M','K') DEFAULT NULL,
-  `jumlah` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
-
-/*Data for the table `testdummy` */
-
-insert  into `testdummy`(`id`,`tgl`,`jenis`,`jumlah`) values 
-(1,'2019-11-13','M',10000000),
-(2,'2019-11-14','M',500000),
-(3,'2019-11-15','K',200000),
-(4,'2019-11-16','M',100000),
-(5,'2019-11-17','K',1000000),
-(6,'2019-11-17','M',1000000),
-(7,'2019-11-18','K',500000),
-(8,'2019-11-19','K',900000),
-(9,'2019-11-20','K',9000000),
-(10,'2019-11-21','K',100000);
+/*Data for the table `pinjaman_uang` */
 
 /*Table structure for table `users` */
 
