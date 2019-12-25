@@ -1,9 +1,11 @@
+<script src="<?= base_url('assets/js/') ?>webcam.min.js"></script>
 <div class="row">
     <div class="col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">
-                    <button type="button" class="btn btn-outline-primary" onclick="window.location.href=('<?= site_url('penitipan-uang/data') ?>')">
+                    <button type="button" class="btn btn-outline-primary"
+                        onclick="window.location.href=('<?= site_url('penitipan-uang/data') ?>')">
                         <i class="fa fa-user-check"></i> Cek Data</button>
                 </h6>
             </div>
@@ -25,26 +27,28 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Pelanggan</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" id="nikpel" required name="nikpel" placeholder="NIK" readonly>
+                        <input type="text" class="form-control" id="nikpel" required name="nikpel" placeholder="NIK"
+                            readonly>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="namapel" required name="namapel" readonly placeholder="Nama Pelanggan">
+                        <input type="text" class="form-control" id="namapel" required name="namapel" readonly
+                            placeholder="Nama Pelanggan">
                     </div>
                     <div class="col-sm-2">
                         <button type="button" class="btn btn-info" onclick="caripelanggan();">
                             <i class="fa fa-search"></i> Cari
                         </button>
                         <script>
-                            function caripelanggan() {
-                                $.ajax({
-                                    url: '<?= site_url('penitipan-uang/caripelanggan') ?>',
-                                    success: function(data) {
-                                        $('.caripelanggan').show();
-                                        $('.caripelanggan').html(data);
-                                        $('#modalcaripelanggan').modal('show');
-                                    }
-                                });
-                            }
+                        function caripelanggan() {
+                            $.ajax({
+                                url: "<?= site_url('penitipan-uang/caripelanggan') ?>",
+                                success: function(data) {
+                                    $('.caripelanggan').show();
+                                    $('.caripelanggan').html(data);
+                                    $('#modalcaripelanggan').modal('show');
+                                }
+                            });
+                        }
                         </script>
                     </div>
                 </div>
@@ -58,17 +62,53 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Keterangan</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="ket" placeholder="Tambahkan Keterangan Jika ada...">
+                        <input type="text" class="form-control" name="ket"
+                            placeholder="Tambahkan Keterangan Jika ada...">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Bukti (Foto)</label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-3">
                         <input type="file" name="uploadbukti" accept=".jpg, .jpeg, .png">
                         <p>
                             <span class="badge badge-info">Tambahkan Bukti Foto jika ada...</span>
                         </p>
                     </div>
+                    <div class="col-sm-3">
+                        <div class="alert alert-info">
+                            Atau Ambil Gambar Dengan WebCam
+                        </div>
+                        <p>
+                            <div id="my_camera">
+
+                            </div>
+                        </p>
+                        <p>
+                            <input type="button" value="Take Picture" class="btn btn-info" onclick="take_picture();">
+                        </p>
+                    </div>
+                    <div class="col-sm-3">
+                        <div id="results">Your captured image will appear here...</div>
+                        <input type="hidden" name="imagecam" class="image-tag">
+                    </div>
+                    <script language="JavaScript">
+                    Webcam.set({
+                        width: 100,
+                        height: 100,
+                        image_format: 'jpeg',
+                        jpeg_quality: 100
+                    });
+                    Webcam.attach('#my_camera');
+
+                    function take_picture() {
+                        Webcam.snap(function(data_uri) {
+                            $(".image-tag").val(data_uri);
+
+                            document.getElementById('results').innerHTML = '<img src="' + data_uri + '"/>';
+
+                        });
+                    }
+                    </script>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label"></label>

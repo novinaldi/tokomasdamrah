@@ -126,7 +126,7 @@ class Penitipan_uang extends CI_Controller
 
                     $datasimpandetail = [
                         'notitip' => $nopenitipan, 'tgl' => $tglpenitipan, 'pilihan' => 1, 'nominal' => $jmluang,
-                        'jmlsaldo' => $jmluang,
+                        // 'jmlsaldo' => $jmluang,
                         'buktifoto' => $pathfotobaru,
                         'ket' => $ket
                     ];
@@ -140,7 +140,7 @@ class Penitipan_uang extends CI_Controller
                 ];
                 $datasimpandetail = [
                     'notitip' => $nopenitipan, 'tgl' => $tglpenitipan, 'pilihan' => 1, 'nominal' => $jmluang,
-                    'jmlsaldo' => $jmluang,
+                    // 'jmlsaldo' => $jmluang,
                     'ket' => $ket
                 ];
             }
@@ -354,12 +354,14 @@ class Penitipan_uang extends CI_Controller
         if ($pilihan == 1) {
             $dataupdate = [
                 'jmlawal' => $totalpenitipan - $nominal,
-                'jmlsisa' => $sisapenitipan - $nominal
+                'jmlsisa' => $sisapenitipan - $nominal,
+                'stt' => 0
             ];
         } else {
             $dataupdate = [
                 'jmlawal' => $sisapenitipan + $nominal,
-                'jmlsisa' => $sisapenitipan + $nominal
+                'jmlsisa' => $sisapenitipan + $nominal,
+                'stt' => 0
             ];
         }
         $this->db->where('notitip', $no);
@@ -401,10 +403,10 @@ class Penitipan_uang extends CI_Controller
         $jmlsisatitipuang = $datatitipuang['jmlsisa'];
 
         //ambil id terakhir dari transaksi detail
-        $querydetail = "SELECT jmlsaldo FROM nn_detailtitipuang ORDER BY iddetail DESC LIMIT 1";
-        $querydata = $this->db->query($querydetail);
-        $rdetail = $querydata->row_array();
-        $jmlsaldoawal = $rdetail['jmlsaldo'];
+        // $querydetail = "SELECT jmlsaldo FROM nn_detailtitipuang ORDER BY iddetail DESC LIMIT 1";
+        // $querydata = $this->db->query($querydetail);
+        // $rdetail = $querydata->row_array();
+        // $jmlsaldoawal = $rdetail['jmlsaldo'];
 
         if ($_FILES['uploadbukti']['name'] != NULL) {
             $config = array(
@@ -437,14 +439,14 @@ class Penitipan_uang extends CI_Controller
                     'notitip' => $notitip, 'tgl' => $tgl, 'pilihan' => 1, 'nominal' => $jml,
                     'buktifoto' => $pathfotobaru,
                     'ket' => $ket,
-                    'jmlsaldo' => $jmlsaldoawal + $jml
+                    // 'jmlsaldo' => $jmlsaldoawal + $jml
                 ];
             }
         } else {
             $datasimpandetail = [
                 'notitip' => $notitip, 'tgl' => $tgl, 'pilihan' => 1, 'nominal' => $jml,
                 'ket' => $ket,
-                'jmlsaldo' => $jmlsaldoawal + $jml
+                // 'jmlsaldo' => $jmlsaldoawal + $jml
             ];
         }
 
@@ -493,10 +495,10 @@ class Penitipan_uang extends CI_Controller
         $jmlsisatitipuang = $datatitipuang['jmlsisa'];
 
         //ambil id terakhir dari transaksi detail
-        $querydetail = "SELECT jmlsaldo FROM nn_detailtitipuang ORDER BY iddetail DESC LIMIT 1";
-        $querydata = $this->db->query($querydetail);
-        $rdetail = $querydata->row_array();
-        $jmlsaldoawal = $rdetail['jmlsaldo'];
+        // $querydetail = "SELECT jmlsaldo FROM nn_detailtitipuang ORDER BY iddetail DESC LIMIT 1";
+        // $querydata = $this->db->query($querydetail);
+        // $rdetail = $querydata->row_array();
+        // $jmlsaldoawal = $rdetail['jmlsaldo'];
 
         if ($jml > $jmlsisatitipuang) {
             //Tampilkan error jika jumlah yang diinput > dari jml sisa
@@ -542,14 +544,14 @@ class Penitipan_uang extends CI_Controller
                         'notitip' => $notitip, 'tgl' => $tgl, 'pilihan' => 2, 'nominal' => $jml,
                         'buktifoto' => $pathfotobaru,
                         'ket' => $ket,
-                        'jmlsaldo' => $jmlsaldoawal - $jml
+                        // 'jmlsaldo' => $jmlsaldoawal - $jml
                     ];
                 }
             } else {
                 $datasimpandetail = [
                     'notitip' => $notitip, 'tgl' => $tgl, 'pilihan' => 2, 'nominal' => $jml,
                     'ket' => $ket,
-                    'jmlsaldo' => $jmlsaldoawal - $jml
+                    // 'jmlsaldo' => $jmlsaldoawal - $jml
                 ];
             }
 

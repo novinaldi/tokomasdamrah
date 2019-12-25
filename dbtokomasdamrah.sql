@@ -1,6 +1,6 @@
 /*
 SQLyog Enterprise v12.5.1 (64 bit)
-MySQL - 10.1.30-MariaDB : Database - dbmasdamrah
+MySQL - 10.4.10-MariaDB : Database - dbtokomasdamrah
 *********************************************************************
 */
 
@@ -23,16 +23,23 @@ CREATE TABLE `detail_penitipanemas` (
   `idjenis` int(11) DEFAULT NULL,
   `pilihan` enum('1','2') DEFAULT NULL,
   `jml` decimal(5,2) DEFAULT NULL,
-  `buktifoto` text,
-  `ket` text,
+  `buktifoto` text DEFAULT NULL,
+  `ket` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `notitip` (`notitip`),
   KEY `idjenis` (`idjenis`),
   CONSTRAINT `detail_penitipanemas_ibfk_1` FOREIGN KEY (`notitip`) REFERENCES `penitipanemas` (`notitip`) ON UPDATE CASCADE,
   CONSTRAINT `detail_penitipanemas_ibfk_2` FOREIGN KEY (`idjenis`) REFERENCES `jenisemas` (`jenisid`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `detail_penitipanemas` */
+
+insert  into `detail_penitipanemas`(`id`,`notitip`,`tgl`,`idjenis`,`pilihan`,`jml`,`buktifoto`,`ket`) values 
+(1,'0910909','2019-12-01',1,'1',90.10,'./assets/upload/buktipenitipanemas/0112190910909.png','-'),
+(3,'0910909','2019-12-25',3,'1',100.90,NULL,'-'),
+(4,'0910909','2019-12-26',3,'2',100.00,NULL,'-'),
+(5,'0910909','2019-12-28',1,'2',90.10,NULL,''),
+(6,'0910909','2019-12-31',3,'2',0.90,'./assets/upload/buktipengambilanemas/3112190910909531.jpg','Diambil semua');
 
 /*Table structure for table `detailpinjaman_emas` */
 
@@ -44,14 +51,19 @@ CREATE TABLE `detailpinjaman_emas` (
   `tgl` date DEFAULT NULL,
   `pilihan` enum('1','2') DEFAULT NULL,
   `jml` decimal(5,2) DEFAULT NULL,
-  `buktifoto` text,
-  `ket` text,
+  `buktifoto` text DEFAULT NULL,
+  `ket` text DEFAULT NULL,
   PRIMARY KEY (`iddetail`),
   KEY `nodetail` (`nodetail`),
   CONSTRAINT `detailpinjaman_emas_ibfk_1` FOREIGN KEY (`nodetail`) REFERENCES `pinjaman_emas` (`nomor`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `detailpinjaman_emas` */
+
+insert  into `detailpinjaman_emas`(`iddetail`,`nodetail`,`tgl`,`pilihan`,`jml`,`buktifoto`,`ket`) values 
+(1,'PIN-EMAS-001','2019-11-01','1',200.00,NULL,'Pinjaman Emas'),
+(2,'PIN-EMAS-001','2019-11-04','2',90.90,NULL,''),
+(3,'PIN-EMAS-001','2019-11-11','2',109.10,NULL,'');
 
 /*Table structure for table `detailpinjaman_uang` */
 
@@ -63,14 +75,25 @@ CREATE TABLE `detailpinjaman_uang` (
   `tgl` date DEFAULT NULL,
   `pilihan` enum('1','2') DEFAULT NULL,
   `jml` double DEFAULT NULL,
-  `buktifoto` text,
-  `ket` text,
+  `buktifoto` text DEFAULT NULL,
+  `ket` text DEFAULT NULL,
   PRIMARY KEY (`iddetail`),
   KEY `nodetail` (`nodetail`),
   CONSTRAINT `detailpinjaman_uang_ibfk_1` FOREIGN KEY (`nodetail`) REFERENCES `pinjaman_uang` (`nomor`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 /*Data for the table `detailpinjaman_uang` */
+
+insert  into `detailpinjaman_uang`(`iddetail`,`nodetail`,`tgl`,`pilihan`,`jml`,`buktifoto`,`ket`) values 
+(1,'PIN-UANG-009','2019-12-23','1',50000,'./assets/upload/buktipeminjaman/231219pin-uang-009.png','Pinjaman Langsung dengan bg abrar'),
+(2,'PIN-UANG-009','2019-12-24','1',25000,NULL,'-'),
+(3,'PIN-UANG-009','2019-12-25','2',25000,'./assets/upload/buktipembayaran/251219pin-uang-009.jpg','Dibayarkan sama bg afif'),
+(4,'PIN-UANG-009','2019-12-26','1',10000,'./assets/upload/buktipeminjaman/261219pin-uang-009.jpg','-'),
+(7,'PIN-UANG-001','2019-12-01','1',100000,'./assets/upload/buktipeminjaman/011219pin-uang-001.png','Lakukan Pinjaman'),
+(8,'PIN-UANG-009','2019-12-31','2',60000,NULL,'Sudah di Lunasi'),
+(9,'PIN-UANG-001','2019-12-03','2',75000,'./assets/upload/buktipembayaran/031219pin-uang-001.jpg','Pembayaran di Angsur sama bg abrar'),
+(10,'PIN-UANG-001','2019-12-04','1',10000,NULL,'Pinjaman dilakukan kembali'),
+(11,'PIN-UANG-001','2019-12-14','2',35000,'./assets/upload/buktipembayaran/141219pin-uang-001.png','Pembayaran langsung dilunasi');
 
 /*Table structure for table `jenisemas` */
 
@@ -116,18 +139,20 @@ CREATE TABLE `nn_detailtitipuang` (
   `tgl` date DEFAULT NULL,
   `pilihan` enum('1','2') DEFAULT NULL COMMENT '1 adalah penitipan dan 2 adalah pengambilan',
   `nominal` double DEFAULT NULL,
-  `jmlsaldo` double DEFAULT NULL,
-  `buktifoto` text,
-  `ket` text,
+  `buktifoto` text DEFAULT NULL,
+  `ket` text DEFAULT NULL,
   PRIMARY KEY (`iddetail`),
   KEY `id` (`notitip`),
   CONSTRAINT `nn_detailtitipuang_ibfk_1` FOREIGN KEY (`notitip`) REFERENCES `nn_titipuang` (`notitip`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
 /*Data for the table `nn_detailtitipuang` */
 
-insert  into `nn_detailtitipuang`(`iddetail`,`notitip`,`tgl`,`pilihan`,`nominal`,`jmlsaldo`,`buktifoto`,`ket`) values 
-(1,'2343','2019-12-03','1',90,90,NULL,'');
+insert  into `nn_detailtitipuang`(`iddetail`,`notitip`,`tgl`,`pilihan`,`nominal`,`buktifoto`,`ket`) values 
+(15,'0911190001','2019-12-27','2',50000,NULL,''),
+(16,'0911190001','2019-12-26','1',200000,NULL,''),
+(17,'0911190001','2019-12-28','1',100000,'./assets/upload/buktipenitipan/2812190911190001.jpg','-'),
+(18,'0911190001','2019-12-31','2',250000,'./assets/upload/buktipengambilan/3112190911190001.png','-');
 
 /*Table structure for table `nn_titipuang` */
 
@@ -139,8 +164,8 @@ CREATE TABLE `nn_titipuang` (
   `pelnik` char(16) DEFAULT NULL,
   `jmlawal` double DEFAULT NULL,
   `jmlsisa` double DEFAULT NULL,
-  `buktifoto` text,
-  `ket` text,
+  `buktifoto` text DEFAULT NULL,
+  `ket` text DEFAULT NULL,
   `stt` char(1) DEFAULT '0',
   PRIMARY KEY (`notitip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -148,7 +173,7 @@ CREATE TABLE `nn_titipuang` (
 /*Data for the table `nn_titipuang` */
 
 insert  into `nn_titipuang`(`notitip`,`tglawal`,`pelnik`,`jmlawal`,`jmlsisa`,`buktifoto`,`ket`,`stt`) values 
-('2343','2019-12-03','1371114509950007',90,90,NULL,NULL,'0');
+('0911190001','2019-12-24','1371114509950012',-50000,0,NULL,NULL,'1');
 
 /*Table structure for table `pelanggan` */
 
@@ -168,7 +193,7 @@ CREATE TABLE `pelanggan` (
 /*Data for the table `pelanggan` */
 
 insert  into `pelanggan`(`pelnik`,`pelnama`,`peljk`,`pelalamat`,`pelnohp`,`pelfoto`) values 
-('1371102108960005','Ramadhani Fitri','P','Solok',NULL,''),
+('1371102108960005','Ramadhani Fitri','P','Solok',NULL,'./assets/upload/ktppelanggan/1371102108960005_1577162427.jpg'),
 ('1371114509950010','Sumayyah Raudhatul Husna','P','Jl. Solok','087779989',NULL),
 ('1371114509950012','Mizan Al-Fatih','L','Solok','081364567765',NULL),
 ('1371114509950090','Al-Fatih Rayhan Abdullah','L','Solok','085272805766',NULL);
@@ -182,7 +207,7 @@ CREATE TABLE `pengeluaran` (
   `namapengeluaran` varchar(100) DEFAULT NULL,
   `tglpengeluaran` date DEFAULT NULL,
   `jmlpengeluaran` double DEFAULT NULL,
-  `uploadbukti` text,
+  `uploadbukti` text DEFAULT NULL,
   `jenisid` int(11) DEFAULT NULL,
   PRIMARY KEY (`idpengeluaran`),
   KEY `jenisid` (`jenisid`),
@@ -211,6 +236,9 @@ CREATE TABLE `penitipanemas` (
 
 /*Data for the table `penitipanemas` */
 
+insert  into `penitipanemas`(`notitip`,`tglawal`,`pelnik`,`totaltitipan`,`totalambil`) values 
+('0910909','2019-12-01','1371114509950090',191.00,191.00);
+
 /*Table structure for table `pinjaman_emas` */
 
 DROP TABLE IF EXISTS `pinjaman_emas`;
@@ -229,6 +257,9 @@ CREATE TABLE `pinjaman_emas` (
 
 /*Data for the table `pinjaman_emas` */
 
+insert  into `pinjaman_emas`(`nomor`,`tglawal`,`nikpel`,`stt`,`jmltotalpinjam`,`jmltotalbayar`) values 
+('PIN-EMAS-001','2019-11-01','1371114509950012','0',200.00,200.00);
+
 /*Table structure for table `pinjaman_uang` */
 
 DROP TABLE IF EXISTS `pinjaman_uang`;
@@ -246,6 +277,10 @@ CREATE TABLE `pinjaman_uang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `pinjaman_uang` */
+
+insert  into `pinjaman_uang`(`nomor`,`tglawal`,`nikpel`,`stt`,`jmltotalpinjam`,`jmltotalbayar`) values 
+('PIN-UANG-001','2019-12-01','1371102108960005','0',110000,110000),
+('PIN-UANG-009','2019-12-23','1371114509950010','0',85000,85000);
 
 /*Table structure for table `users` */
 

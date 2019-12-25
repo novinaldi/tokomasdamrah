@@ -256,8 +256,8 @@ class Peminjamanuang extends CI_Controller
         $cekdatapeminjaman = $this->db->get_where('pinjaman_uang', ['nomor' => $nopeminjaman]);
         if ($cekdatapeminjaman->num_rows() > 0) {
 
-            $qdatadetail = $this->db->get_where('detailpinjaman_uang',['nodetail' => $nopeminjaman]);
-            foreach($qdatadetail->result_array() as $rq){
+            $qdatadetail = $this->db->get_where('detailpinjaman_uang', ['nodetail' => $nopeminjaman]);
+            foreach ($qdatadetail->result_array() as $rq) {
                 $pathdetail = $rq['buktifoto'];
                 @unlink($pathdetail);
             }
@@ -477,7 +477,8 @@ class Peminjamanuang extends CI_Controller
             redirect('peminjamanuang/data', 'refresh');
         }
     }
-    function simpandetailpembayaran(){
+    function simpandetailpembayaran()
+    {
         $nopeminjaman = $this->input->post('nopeminjaman', true);
         $tgl = $this->input->post('tgl', true);
         $jml = $this->input->post('jml', true);
@@ -487,62 +488,14 @@ class Peminjamanuang extends CI_Controller
         $queryambildata_pinjaman = $this->db->get_where('pinjaman_uang', ['nomor' => $nopeminjaman]);
         $rpinjaman = $queryambildata_pinjaman->row_array();
         $jmltotalbayar = $rpinjaman['jmltotalbayar'];
+        $jmltotalpinjam = $rpinjaman['jmltotalpinjam'];
 
-        if ($_FILES['uploadbukti']['name']) {
-            $config = array(
-                'upload_path' => './assets/upload/buktipembayaran/', //nama folder di root
-                'allowed_types' => 'jpg|jpeg|png',
-                'max_size' => 0,
-                'max_width' => 0,
-                'max_height' => 0,
-                'file_name' => strtolower(date('dmy', strtotime($tgl)) . $nopeminjaman)
-            );
-            $this->load->library('upload');
-            $this->upload->initialize($config);
-            if (!$this->upload->do_upload('uploadbukti')) {
-                $pesan = [
-                    'validasi' => '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error !</strong> ' . $this->upload->display_errors() . '
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>'
-                ];
-                $this->session->set_flashdata($pesan);
-                redirect('peminjamanuang/detaildata/' . $nopeminjaman, 'refresh');
-            } else {
-                $media = $this->upload->data();
-                $pathbukitbaru = './assets/upload/buktipembayaran/' . $media['file_name'];
+        $sisa = $jmltotalpinjam - $jmltotalbayar;
 
-                $datasimpan_detailpeminjamanuang = [
-                    'nodetail' => $nopeminjaman, 'tgl' => $tgl,
-                    'pilihan' => 2,
-                    'jml' => $jml, 'buktifoto' => $pathbukitbaru,
-                    'ket' => $ket
-                ];
-            }
-        } else {
-            $datasimpan_detailpeminjamanuang = [
-                'nodetail' => $nopeminjaman, 'tgl' => $tgl,
-                'pilihan' => 2,
-                'jml' => $jml,
-                'ket' => $ket
-            ];
-        }
-
-
-        $simpandata = $this->db->insert('detailpinjaman_uang', $datasimpan_detailpeminjamanuang);
-
-        //update total pinjam pada tabel pinjaman uang
-        $dataupdatepinjamanuang = [
-            'jmltotalbayar' => $jmltotalbayar + $jml
-        ];
-        $this->db->where('nomor', $nopeminjaman);
-        $this->db->update('pinjaman_uang', $dataupdatepinjamanuang);
-        if ($simpandata) {
+        if ($jml > $sisa) {
             $pesan = [
-                'validasi' => '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                <h4 class="badge badger-success">Berhasil !</h4> Pembayaran Hutang berhasil ditambahkan...
+                'validasi' => '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <h1 class="badge badger-danger">Error !</h1> Jumlah Pembayaran Yang di Input, Melebihi yang tersisa !!!
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -550,6 +503,70 @@ class Peminjamanuang extends CI_Controller
             ];
             $this->session->set_flashdata($pesan);
             redirect('peminjamanuang/detaildata/' . $nopeminjaman, 'refresh');
+        } else {
+            if ($_FILES['uploadbukti']['name']) {
+                $config = array(
+                    'upload_path' => './assets/upload/buktipembayaran/', //nama folder di root
+                    'allowed_types' => 'jpg|jpeg|png',
+                    'max_size' => 0,
+                    'max_width' => 0,
+                    'max_height' => 0,
+                    'file_name' => strtolower(date('dmy', strtotime($tgl)) . $nopeminjaman)
+                );
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+                if (!$this->upload->do_upload('uploadbukti')) {
+                    $pesan = [
+                        'validasi' => '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error !</strong> ' . $this->upload->display_errors() . '
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>'
+                    ];
+                    $this->session->set_flashdata($pesan);
+                    redirect('peminjamanuang/detaildata/' . $nopeminjaman, 'refresh');
+                } else {
+                    $media = $this->upload->data();
+                    $pathbukitbaru = './assets/upload/buktipembayaran/' . $media['file_name'];
+
+                    $datasimpan_detailpeminjamanuang = [
+                        'nodetail' => $nopeminjaman, 'tgl' => $tgl,
+                        'pilihan' => 2,
+                        'jml' => $jml, 'buktifoto' => $pathbukitbaru,
+                        'ket' => $ket
+                    ];
+                }
+            } else {
+                $datasimpan_detailpeminjamanuang = [
+                    'nodetail' => $nopeminjaman, 'tgl' => $tgl,
+                    'pilihan' => 2,
+                    'jml' => $jml,
+                    'ket' => $ket
+                ];
+            }
+
+
+            $simpandata = $this->db->insert('detailpinjaman_uang', $datasimpan_detailpeminjamanuang);
+
+            //update total pinjam pada tabel pinjaman uang
+            $dataupdatepinjamanuang = [
+                'jmltotalbayar' => $jmltotalbayar + $jml
+            ];
+            $this->db->where('nomor', $nopeminjaman);
+            $this->db->update('pinjaman_uang', $dataupdatepinjamanuang);
+            if ($simpandata) {
+                $pesan = [
+                    'validasi' => '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <h4 class="badge badger-success">Berhasil !</h4> Pembayaran Hutang berhasil ditambahkan...
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>'
+                ];
+                $this->session->set_flashdata($pesan);
+                redirect('peminjamanuang/detaildata/' . $nopeminjaman, 'refresh');
+            }
         }
     }
 }

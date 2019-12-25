@@ -13,14 +13,21 @@
 
     <!-- Custom fonts for this template-->
     <link href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="<?= base_url('assets/') ?>css/sb-admin-2.min.css" rel="stylesheet">
-
+    <style>
+    .gambar {
+        background-image: url(<?= base_url('assets/img/bg.jpg') ?>);
+        background-size: 100%;
+    }
+    </style>
 </head>
 
-<body class="bg-gradient-success">
+<body class="gambar">
 
     <div class="container">
 
@@ -40,13 +47,15 @@
                                         <h1 class="h4 text-gray-900 mb-4">Selamat Datang, Silahkan Login !</h1>
                                         <hr>
                                     </div>
-                                    <?= $this->session->flashdata('pesan')?>
+                                    <?= $this->session->flashdata('pesan') ?>
                                     <?= form_open('login/validasiuser', ['class' => 'user']) ?>
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" autofocus autocomplete="off" placeholder="Inputkan ID User..." name="uid">
+                                        <input type="text" class="form-control form-control-user" autofocus
+                                            autocomplete="off" placeholder="Inputkan ID User..." name="uid">
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" autofocus autocomplete="off" placeholder="Inputkan Password Anda..." name="pass">
+                                        <input type="password" class="form-control form-control-user" autofocus
+                                            autocomplete="off" placeholder="Inputkan Password Anda..." name="pass">
                                     </div>
                                     <input type="submit" value="Login" class="btn btn-primary btn-user btn-block">
 

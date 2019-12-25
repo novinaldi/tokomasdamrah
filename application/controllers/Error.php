@@ -7,6 +7,7 @@ class Error extends CI_Controller
     }
     public function index()
     {
-        $this->load->view('error404.php');
+        // $this->load->view('error404.php');
+        echo 'halo';
     }
 }

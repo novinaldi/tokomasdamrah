@@ -331,41 +331,27 @@ class Pelanggan extends CI_Controller
     function doupload()
     {
         $nik = $this->input->post('nik', true);
-        $config = array(
-            'upload_path' => './assets/upload/ktppelanggan/', //nama folder di root
-            'allowed_types' => 'jpg|jpeg|png',
-            'max_size' => 0,
-            'max_width' => 0,
-            'max_height' => 0,
-            'file_name' => strtolower($nik)
-        );
-        $this->load->library('upload');
-        $this->upload->initialize($config);
-        if (!$this->upload->do_upload('uploadktp')) {
 
-            $pesan = [
-                'pesan' => '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show">
-                <span class="badge badge-pill badge-danger">Error !</span>
-                ' . $this->upload->display_errors() . '
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-            </div>'
-            ];
-            $this->session->set_flashdata($pesan);
-            redirect('pelanggan/formupload/' . $nik, 'refresh');
-        } else {
-            $ambildata = $this->db->get_where('pelanggan', ['pelnik' => $nik]);
-            $r = $ambildata->row_array();
-            $pathfotolama = $r['pelfoto'];
+
+        $ambildata = $this->db->get_where('pelanggan', ['pelnik' => $nik]);
+        $r = $ambildata->row_array();
+        $pathfotolama = $r['pelfoto'];
+        if ($_FILES['uploadktp']['name'] == NULL) {
+            //upload dari webcam
+
+            $image = $_POST['imagecam'];
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+
+            $image = base64_decode($image, true);
+            // echo $image;
+            $filename = $nik . '_' . time() . '.jpg';
+            file_put_contents(FCPATH . '/assets/upload/ktppelanggan/' . $filename, $image);
+
             @unlink($pathfotolama);
-
-            $media = $this->upload->data();
-            $pathfotobaru = './assets/upload/ktppelanggan/' . $media['file_name'];
 
             //update foto pelanggan
             $dataupdate = [
-                'pelfoto' => $pathfotobaru
+                'pelfoto' => './assets/upload/ktppelanggan/' . $filename
             ];
             $this->db->where('pelnik', $nik);
             $this->db->update('pelanggan', $dataupdate);
@@ -381,6 +367,55 @@ class Pelanggan extends CI_Controller
             ];
             $this->session->set_flashdata($pesan);
             redirect('pelanggan/formupload/' . $nik, 'refresh');
+        } else {
+            $config = array(
+                'upload_path' => './assets/upload/ktppelanggan/', //nama folder di root
+                'allowed_types' => 'jpg|jpeg|png',
+                'max_size' => 0,
+                'max_width' => 0,
+                'max_height' => 0,
+                'file_name' => strtolower($nik) . '_' . time()
+            );
+            $this->load->library('upload');
+            $this->upload->initialize($config);
+            if (!$this->upload->do_upload('uploadktp')) {
+
+                $pesan = [
+                    'pesan' => '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show">
+                    <span class="badge badge-pill badge-danger">Error !</span>
+                    ' . $this->upload->display_errors() . '
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                </div>'
+                ];
+                $this->session->set_flashdata($pesan);
+                redirect('pelanggan/formupload/' . $nik, 'refresh');
+            } else {
+                @unlink($pathfotolama);
+
+                $media = $this->upload->data();
+                $pathfotobaru = './assets/upload/ktppelanggan/' . $media['file_name'];
+
+                //update foto pelanggan
+                $dataupdate = [
+                    'pelfoto' => $pathfotobaru
+                ];
+                $this->db->where('pelnik', $nik);
+                $this->db->update('pelanggan', $dataupdate);
+
+                $pesan = [
+                    'pesan' => '<div class="sufee-alert alert with-close alert-success alert-dismissible fade show">
+                    <span class="badge badge-pill badge-success">Upload Foto Berhasil !</span>
+                    Silahkan tekan tombol kembali untuk melihat foto yang telah di upload...
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                </div>'
+                ];
+                $this->session->set_flashdata($pesan);
+                redirect('pelanggan/formupload/' . $nik, 'refresh');
+            }
         }
     }
 }

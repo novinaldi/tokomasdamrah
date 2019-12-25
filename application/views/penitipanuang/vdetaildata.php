@@ -1,7 +1,7 @@
 <script>
-    $(function() {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
+$(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+});
 </script>
 <div class="row">
     <div class="col-lg-12">
@@ -51,59 +51,61 @@
 
                 <?php
                 if ($stt == 0) {
-                    ?>
-                    <div class="row">
-                        <div class="col">
-                            <button type="button" class="btn btn-primary btn-block" onclick="tambahpenitipan('<?= $notitip; ?>')">
-                                Tambah Titipan
-                            </button>
-                            <script>
-                                function tambahpenitipan(notitip) {
-                                    $.ajax({
-                                        url: '<?= site_url('penitipan-uang/formtambahpenitipan') ?>',
-                                        data: "&notitip=" + notitip,
-                                        type: 'post',
-                                        cache: false,
-                                        success: function(data) {
-                                            $('.formtambahdata').show();
-                                            $('.formtambahdata').html(data);
-                                            $('#modalformtambahdata').modal('show');
-                                        }
-                                    });
+                ?>
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-block"
+                            onclick="tambahpenitipan('<?= $notitip; ?>')">
+                            Tambah Titipan
+                        </button>
+                        <script>
+                        function tambahpenitipan(notitip) {
+                            $.ajax({
+                                url: "<?= site_url('penitipan_uang/formtambahpenitipan') ?>",
+                                data: "&notitip=" + notitip,
+                                type: 'post',
+                                cache: false,
+                                success: function(data) {
+                                    $('.formtambahdata').show();
+                                    $('.formtambahdata').html(data);
+                                    $('#modalformtambahdata').modal('show');
                                 }
-                            </script>
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-info btn-block" onclick="tambahpengambilan('<?= $notitip; ?>')">
-                                Tambah Pengambilan
-                            </button>
-                            <script>
-                                function tambahpengambilan(notitip) {
-                                    $.ajax({
-                                        url: '<?= site_url('penitipan-uang/formtambahpengambilan') ?>',
-                                        data: "&notitip=" + notitip,
-                                        type: 'post',
-                                        cache: false,
-                                        success: function(data) {
-                                            $('.formtambahdata').show();
-                                            $('.formtambahdata').html(data);
-                                            $('#modalformtambahdata').modal('show');
-                                        }
-                                    });
-                                }
-                            </script>
-                        </div>
+                            });
+                        }
+                        </script>
                     </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-info btn-block"
+                            onclick="tambahpengambilan('<?= $notitip; ?>')">
+                            Tambah Pengambilan
+                        </button>
+                        <script>
+                        function tambahpengambilan(notitip) {
+                            $.ajax({
+                                url: "<?= site_url('penitipan_uang/formtambahpengambilan') ?>",
+                                data: "&notitip=" + notitip,
+                                type: 'post',
+                                cache: false,
+                                success: function(data) {
+                                    $('.formtambahdata').show();
+                                    $('.formtambahdata').html(data);
+                                    $('#modalformtambahdata').modal('show');
+                                }
+                            });
+                        }
+                        </script>
+                    </div>
+                </div>
                 <?php
                 } else {
-                    ?>
-                    <div class="row">
-                        <div class="col">
-                            <div class="alert alert-info text-center">
-                                <h5>Titipan Sudah di Ambil Semua...</h5>
-                            </div>
+                ?>
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-info text-center">
+                            <h5>Titipan Sudah di Ambil Semua...</h5>
                         </div>
                     </div>
+                </div>
                 <?php
                 }
                 ?>
@@ -130,8 +132,8 @@
                 $querydata = "SELECT a.iddetail AS id, a.`notitip` AS notitip,a.`tgl` AS tgl,
                             CASE a.`pilihan` WHEN 1 THEN nominal ELSE 0 END AS titipan,
                             CASE a.`pilihan` WHEN 2 THEN nominal ELSE 0 END AS ambil,
-                            a.jmlsaldo AS jmlsaldo, a.buktifoto, a.ket
-                            FROM nn_detailtitipuang a WHERE a.notitip = '$notitip' ORDER BY id,tgl ASC";
+                            a.buktifoto, a.ket
+                            FROM nn_detailtitipuang a WHERE a.notitip = '$notitip' ORDER BY tgl ASC";
                 //Pagination
                 $query_data = $this->db->query($querydata);
                 $total_data = $query_data->num_rows();
@@ -184,8 +186,8 @@
                 $qx = "SELECT a.iddetail AS id, a.`notitip` AS notitip,a.`tgl` AS tgl,
                 CASE a.`pilihan` WHEN 1 THEN nominal ELSE 0 END AS titipan,
                 CASE a.`pilihan` WHEN 2 THEN nominal ELSE 0 END AS ambil,
-                a.jmlsaldo AS jmlsaldo, a.buktifoto, a.ket
-                FROM nn_detailtitipuang a WHERE a.notitip = '$notitip' ORDER BY id,tgl ASC LIMIT " . $start . ',' . $per_page;
+                a.buktifoto, a.ket
+                FROM nn_detailtitipuang a WHERE a.notitip = '$notitip' ORDER BY tgl ASC LIMIT " . $start . ',' . $per_page;
 
                 //end Pagination
 
@@ -211,47 +213,44 @@
                     <tbody>
                         <?php
                         if ($totaldata > 0) {
+                            $jumlahsaldo = 0;
                             foreach ($datadetail->result_array() as $row) {
                                 $nomor++;
-                                ?>
-                                <tr>
-                                    <td><?= $nomor; ?></td>
-                                    <td><?= date('d-m-Y', strtotime($row['tgl'])) ?></td>
-                                    <td align="right"><?= number_format($row['titipan'], 0) ?></td>
-                                    <td align="right"><?= number_format($row['ambil'], 0) ?></td>
-                                    <td align="right"><?= number_format($row['jmlsaldo'], 0) ?></td>
-                                    <td>
-                                        <?php
-                                                echo $row['ket'];
-                                                if ($row['buktifoto'] != NULL) {
-                                                    ?>
-                                            <p>
-                                                <button type="button" class="btn btn-outline-info" onclick="lihatbuktipenitipan('<?= $row['id'] ?>')">Lihat Bukti</button>
-                                            </p>
-                                        <?php
-                                                }
-                                                ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                                if ($stt == 0) {
-                                                    ?>
-                                            <button type="button" onclick="hapusdetail('<?= $row['id'] ?>','<?= $notitip ?>');" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Hapus Data Detail Penitipan">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        <?php
-                                                } else {
-                                                    echo '<span class="badge badge-info ">Titipan sudah diambil</span>';
-                                                }
-                                                ?>
-                                    </td>
-                                </tr>
-                            <?php
-                                }
-                                ?>
-                            <tr>
-                                <td></td>
-                            </tr>
+                                $jumlahsaldo = ($jumlahsaldo + $row['titipan']) - $row['ambil'];
+                        ?>
+                        <tr>
+                            <td><?= $nomor; ?></td>
+                            <td><?= date('d-m-Y', strtotime($row['tgl'])) ?></td>
+                            <td align="right"><?= number_format($row['titipan'], 0) ?></td>
+                            <td align="right"><?= number_format($row['ambil'], 0) ?></td>
+                            <td align="right"><?= number_format($jumlahsaldo, 0) ?></td>
+                            <td>
+                                <?php
+                                        echo $row['ket'];
+                                        if ($row['buktifoto'] != NULL) {
+                                        ?>
+                                <p>
+                                    <button type="button" class="btn btn-outline-info"
+                                        onclick="lihatbuktipenitipan('<?= $row['id'] ?>')">Lihat Bukti</button>
+                                </p>
+                                <?php
+                                        }
+                                        ?>
+                            </td>
+                            <td>
+                                <button type="button" onclick="hapusdetail('<?= $row['id'] ?>','<?= $notitip ?>');"
+                                    class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top"
+                                    title="Hapus Data Detail Penitipan">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <?php
+                            }
+                            ?>
+                        <tr>
+                            <td></td>
+                        </tr>
                         <?php
                         } else {
                             echo '<tr><th colspan="7">Data belum ada...</th></tr>';
@@ -270,34 +269,34 @@
 </div>
 <div class="tampildetailbuktifoto" style="display:none;"></div>
 <script>
-    function hapusdetail(id, notitip) {
-        Swal.fire({
-            title: 'Hapus Detail',
-            text: "Yakin hapus data ini ?",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Hapus !',
-            cancelButtonText: 'Tidak',
-        }).then((result) => {
-            if (result.value) {
-                location.href = ('<?= site_url('penitipan-uang/hapusdetaildata/') ?>' + id + '/' + notitip);
-            }
-        })
-    }
+function hapusdetail(id, notitip) {
+    Swal.fire({
+        title: 'Hapus Detail',
+        text: "Yakin hapus data ini ?",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Hapus !',
+        cancelButtonText: 'Tidak',
+    }).then((result) => {
+        if (result.value) {
+            location.href = ("<?= site_url('penitipan-uang/hapusdetaildata/') ?>" + id + "/" + notitip);
+        }
+    })
+}
 
-    function lihatbuktipenitipan(id) {
-        $.ajax({
-            url: '<?= site_url('penitipan-uang/tampilkanbuktifoto') ?>',
-            data: "&id=" + id,
-            type: 'post',
-            cache: false,
-            success: function(data) {
-                $('.tampildetailbuktifoto').show();
-                $('.tampildetailbuktifoto').html(data);
-                $('#modaltampildetailbuktifoto').modal('show');
-            }
-        });
-    }
+function lihatbuktipenitipan(id) {
+    $.ajax({
+        url: "<?= site_url('penitipan-uang/tampilkanbuktifoto') ?>",
+        data: "&id=" + id,
+        type: 'post',
+        cache: false,
+        success: function(data) {
+            $('.tampildetailbuktifoto').show();
+            $('.tampildetailbuktifoto').html(data);
+            $('#modaltampildetailbuktifoto').modal('show');
+        }
+    });
+}
 </script>
