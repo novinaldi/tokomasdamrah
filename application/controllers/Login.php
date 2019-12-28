@@ -45,13 +45,21 @@ class Login extends CI_Controller
             $cekuser = $this->db->get_where('users', ['userid' => $iduser]);
             if ($cekuser->num_rows() > 0) {
                 $row = $cekuser->row_array();
+
+                //ambildata level 
+                $datalevel = $this->db->get_where('levels', ['levelid' => $row['userlevelid']]);
+                $rlevel = $datalevel->row_array();
+
                 $hashpass = $row['userpass'];
                 if (password_verify($pass, $hashpass)) {
                     $ses_array = [
                         'masuk' => true,
                         'iduser' => $iduser,
                         'namauser' => $row['usernama'],
-                        'foto' => $row['userfoto']
+                        'foto' => $row['userfoto'],
+                        'id' => $row['id'],
+                        'namalevel' => $rlevel['levelnama'],
+                        'idlevel' => $rlevel['levelid']
                     ];
                     $this->session->set_userdata($ses_array);
                 } else {
@@ -98,10 +106,10 @@ class Login extends CI_Controller
         }
     }
 
-    function keluar(){
+    function keluar()
+    {
         $this->session->sess_destroy();
-        
-        redirect('login/index','refresh');
-        
+
+        redirect('login/index', 'refresh');
     }
 }

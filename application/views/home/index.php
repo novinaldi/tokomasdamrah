@@ -9,6 +9,7 @@
                     <div class="sufee-alert alert with-close alert-primary alert-dismissible fade show">
                         <span class="badge badge-pill badge-primary">Selamat Datang</span>
                         Silahkan Kelola sistem ini dengan baik
+
                     </div>
                 </p>
             </div>
