@@ -23,6 +23,9 @@ th {
     <tbody>
         <?php
         $nomor = 0;
+        $totalseluruhpenitipan = 0;
+        $totalseluruhpengambilan = 0;
+        $totalsisa = 0;
         foreach ($tampildata as $r) :
             $nomor++;
         ?>
@@ -71,7 +74,23 @@ th {
             </td>
         </tr>
         <?php
+            $totalseluruhpenitipan = $totalseluruhpenitipan + $totalpenitipan;
+            $totalseluruhpengambilan = $totalseluruhpengambilan + $totalpengambilan;
+            $totalsisa = $totalsisa + $sisa;
         endforeach;
         ?>
+        <tr>
+            <th colspan="4">Total Keseluruhan</th>
+            <td align="right" style="font-weight: bold;">
+                <?= number_format($totalseluruhpenitipan, 0, ",", "."); ?>
+            </td>
+            <td align="right" style="font-weight: bold;">
+                <?= number_format($totalseluruhpengambilan, 0, ",", "."); ?>
+            </td>
+            <td align="right" style="font-weight: bold;">
+                <?= number_format($totalsisa, 0, ",", "."); ?>
+            </td>
+            <td></td>
+        </tr>
     </tbody>
 </table>
